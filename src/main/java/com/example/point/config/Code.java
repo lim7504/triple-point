@@ -1,8 +1,14 @@
 package com.example.point.config;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
 import lombok.ToString;
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.ToStringStyle;
 import org.springframework.http.HttpStatus;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Getter
 @ToString
@@ -25,6 +31,12 @@ public enum Code {
         this.message = message;
         this.status = status;
     }
+
+    @JsonValue
+    public String getCode() {
+        return this.code;
+    }
+
 }
 
 
