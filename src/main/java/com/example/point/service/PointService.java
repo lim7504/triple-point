@@ -3,8 +3,8 @@ package com.example.point.service;
 import com.example.point.config.Code;
 import com.example.point.config.TripleException;
 import com.example.point.domain.User;
-import com.example.point.domain.UserPointHistory;
 import com.example.point.domain.dto.PointParam;
+import com.example.point.domain.dto.PointResult;
 import com.example.point.repository.UserPointHistoryRepository;
 import com.example.point.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,16 +19,19 @@ public class PointService {
     private final UserRepository userRepository;
 
     @Transactional
-    public void addPointHistory(PointParam pointParam) {
-        UserPointHistory userPointHistory =  UserPointHistory.createUserPointHistory(pointParam.getUserId(), pointParam.getPointType(), pointParam.getReason(), pointParam.getPoint());
-        this.userPointHistoryRepository.save(userPointHistory);
-
-        User user = this.getUser(pointParam);
-        user.updatePoint(pointParam.getPointType(), pointParam.getPoint());
+    public void applyPoint(PointParam pointParam) {
+        User user = this.getUser(pointParam.getUserId());
+        user.applyPoint(pointParam);
     }
 
-    private User getUser(PointParam pointParam) {
-        return this.userRepository.findById(pointParam.getUserId())
+    public PointResult getPointByUser(String userId) {
+        User user = this.getUser(userId);
+        return user.getPointResult();
+    }
+
+    private User getUser(String userId) {
+        return this.userRepository.findById(userId)
                 .orElseThrow(() -> new TripleException(Code.ACCOUNT_NOT_FOUND));
     }
+
 }

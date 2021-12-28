@@ -3,9 +3,7 @@ package com.example.point.domain;
 import lombok.Getter;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @Getter
@@ -16,20 +14,33 @@ public class UserPointHistory extends CreatedModifiedAuditing {
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
 
-    private String userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
+    @Enumerated(EnumType.STRING)
     private PointType type;
 
     private String reason;
 
-    private Integer point;
+    private Integer applyPoint;
 
-    public static UserPointHistory createUserPointHistory(String userId, PointType type, String reason, Integer point) {
+    private Integer accumulatedPoint;
+
+    public static UserPointHistory createUserPointHistory(User user, PointType type, String reason, Integer applyPoint, Integer accumulatedPoint) {
         UserPointHistory newUserPointHistory = new UserPointHistory();
-        newUserPointHistory.userId = userId;
+        newUserPointHistory.user = user;
         newUserPointHistory.type = type;
         newUserPointHistory.reason = reason;
-        newUserPointHistory.point = point;
+        newUserPointHistory.applyPoint = applyPoint;
+        newUserPointHistory.accumulatedPoint = accumulatedPoint;
         return newUserPointHistory;
+    }
+
+    public String getLog() {
+        return "type=" + type +
+                ", applyPoint=" + applyPoint +
+                ", accumulatedPoint=" + accumulatedPoint +
+                ", reason='" + reason + '\'';
     }
 }
