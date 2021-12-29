@@ -41,6 +41,7 @@ public class UserPointHistory extends CreatedModifiedAuditing {
         return "type=" + type +
                 ", applyPoint=" + applyPoint +
                 ", accumulatedPoint=" + accumulatedPoint +
-                ", reason='" + reason + '\'';
+                ", reason='" + reason + '\'' +
+                ", created_date='" + createdDate;
     }
 }
